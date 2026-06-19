@@ -1,0 +1,1760 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Colin Murray — Architectural Engineering &amp; Sports Analytics</title>
+<meta name="description" content="Colin Murray — Architectural Engineering portfolio and Sports Analytics &amp; Scouting projects.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0D0D0F;
+    --bg-raised:#15151A;
+    --card:#1A1A1F;
+    --card-border:#2A2A30;
+    --text:#E8E4DC;
+    --text-dim:#9A968E;
+    --text-faint:#6B6862;
+    --amber:#C4A882;
+    --amber-bright:#D8BD96;
+    --amber-dim:#5C4F3C;
+    --cyan:#00C2C7;
+    --cyan-bright:#3DDDE1;
+    --cyan-dim:#0A4A4C;
+    --accent: var(--amber);
+    --accent-bright: var(--amber-bright);
+    --accent-dim: var(--amber-dim);
+    --accent-soft: rgba(196,168,130,0.1);
+    --serif-display: 'Space Grotesk', sans-serif;
+    --body: 'Inter', sans-serif;
+    --mono: 'JetBrains Mono', monospace;
+    --transition: 0.5s cubic-bezier(0.65,0,0.35,1);
+  }
+
+  *{margin:0;padding:0;box-sizing:border-box;}
+
+  html{scroll-behavior:smooth;}
+
+  body{
+    background:var(--bg);
+    color:var(--text);
+    font-family:var(--body);
+    line-height:1.6;
+    overflow-x:hidden;
+    transition: background var(--transition);
+  }
+
+  body.mode-sports{
+    --accent: var(--cyan);
+    --accent-bright: var(--cyan-bright);
+    --accent-dim: var(--cyan-dim);
+    --accent-soft: rgba(0,194,199,0.1);
+  }
+
+  a{color:inherit;text-decoration:none;}
+
+  ::selection{background:var(--accent);color:var(--bg);}
+
+  /* ===== Scrollbar ===== */
+  ::-webkit-scrollbar{width:10px;}
+  ::-webkit-scrollbar-track{background:var(--bg);}
+  ::-webkit-scrollbar-thumb{background:var(--card-border);border-radius:5px;}
+  ::-webkit-scrollbar-thumb:hover{background:var(--accent-dim);}
+
+  /* ===== Top nav ===== */
+  .topnav{
+    position:fixed;top:0;left:0;right:0;
+    z-index:100;
+    display:flex;align-items:center;justify-content:space-between;
+    padding:22px 5vw;
+    background:rgba(13,13,15,0.82);
+    backdrop-filter:blur(14px);
+    border-bottom:1px solid var(--card-border);
+    transition:border-color var(--transition);
+  }
+  .nav-name{
+    font-family:var(--serif-display);
+    font-weight:600;
+    font-size:1.05rem;
+    letter-spacing:0.01em;
+    display:flex;align-items:center;gap:10px;
+  }
+  .nav-dot{
+    width:8px;height:8px;border-radius:50%;
+    background:var(--accent);
+    transition:background var(--transition);
+    box-shadow:0 0 12px var(--accent);
+  }
+  .nav-links{
+    display:flex;align-items:center;gap:36px;
+  }
+  .nav-links a{
+    font-size:0.82rem;
+    letter-spacing:0.06em;
+    text-transform:uppercase;
+    color:var(--text-dim);
+    transition:color 0.25s;
+    position:relative;
+  }
+  .nav-links a:hover{color:var(--text);}
+
+  .toggle{
+    display:flex;align-items:center;
+    background:var(--card);
+    border:1px solid var(--card-border);
+    border-radius:30px;
+    padding:4px;
+    gap:2px;
+    cursor:pointer;
+    user-select:none;
+  }
+  .toggle-opt{
+    font-family:var(--mono);
+    font-size:0.7rem;
+    letter-spacing:0.04em;
+    text-transform:uppercase;
+    padding:8px 16px;
+    border-radius:24px;
+    color:var(--text-faint);
+    transition:all 0.35s cubic-bezier(0.65,0,0.35,1);
+    white-space:nowrap;
+  }
+  .toggle-opt.active{
+    background:var(--accent);
+    color:var(--bg);
+    font-weight:600;
+  }
+
+  .nav-burger{display:none;}
+
+  @media (max-width:860px){
+    .nav-links{display:none;}
+    .topnav{padding:18px 5vw;}
+  }
+
+  /* ===== Hero ===== */
+  .hero{
+    min-height:100vh;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    padding:140px 5vw 80px;
+    position:relative;
+  }
+
+  .hero-split-line{
+    position:absolute;
+    top:0;bottom:0;left:50%;
+    width:1px;
+    background:linear-gradient(to bottom, transparent, var(--card-border) 15%, var(--card-border) 85%, transparent);
+    opacity:0.5;
+    pointer-events:none;
+    display:none;
+  }
+  @media (min-width:861px){ .hero-split-line{display:block;} }
+
+  .hero-eyebrow{
+    font-family:var(--mono);
+    font-size:0.8rem;
+    letter-spacing:0.12em;
+    text-transform:uppercase;
+    color:var(--accent);
+    margin-bottom:24px;
+    display:flex;align-items:center;gap:12px;
+    opacity:0;
+    animation:fadeUp 0.8s 0.1s forwards;
+  }
+  .hero-eyebrow::before{
+    content:'';
+    width:28px;height:1px;
+    background:var(--accent);
+  }
+
+  .hero h1{
+    font-family:var(--serif-display);
+    font-weight:600;
+    font-size:clamp(2.6rem, 7vw, 5.6rem);
+    line-height:1.02;
+    letter-spacing:-0.02em;
+    max-width:18ch;
+    opacity:0;
+    animation:fadeUp 0.8s 0.2s forwards;
+  }
+  .hero h1 .accent-word{color:var(--accent);font-style:normal;}
+
+  .hero-sub{
+    margin-top:28px;
+    font-size:1.15rem;
+    color:var(--text-dim);
+    max-width:46ch;
+    opacity:0;
+    animation:fadeUp 0.8s 0.32s forwards;
+  }
+
+  .hero-meta-row{
+    margin-top:52px;
+    display:flex;
+    gap:48px;
+    flex-wrap:wrap;
+    opacity:0;
+    animation:fadeUp 0.8s 0.44s forwards;
+  }
+  .hero-meta-item{
+    font-family:var(--mono);
+    font-size:0.78rem;
+  }
+  .hero-meta-item .label{
+    color:var(--text-faint);
+    text-transform:uppercase;
+    letter-spacing:0.08em;
+    display:block;
+    margin-bottom:6px;
+  }
+  .hero-meta-item .value{
+    color:var(--text);
+    font-size:0.92rem;
+  }
+
+  .hero-cta-row{
+    margin-top:48px;
+    display:flex;
+    gap:16px;
+    flex-wrap:wrap;
+    opacity:0;
+    animation:fadeUp 0.8s 0.56s forwards;
+  }
+  .btn{
+    font-family:var(--mono);
+    font-size:0.8rem;
+    letter-spacing:0.04em;
+    padding:14px 26px;
+    border-radius:2px;
+    transition:all 0.3s;
+    display:inline-flex;align-items:center;gap:10px;
+    cursor:pointer;
+  }
+  .btn-primary{
+    background:var(--accent);
+    color:var(--bg);
+    font-weight:600;
+  }
+  .btn-primary:hover{background:var(--accent-bright);transform:translateY(-2px);}
+  .btn-outline{
+    border:1px solid var(--card-border);
+    color:var(--text);
+  }
+  .btn-outline:hover{border-color:var(--accent);color:var(--accent);}
+
+  @keyframes fadeUp{
+    from{opacity:0;transform:translateY(16px);}
+    to{opacity:1;transform:translateY(0);}
+  }
+
+  /* ===== Section scaffolding ===== */
+  section{
+    padding:140px 5vw;
+    position:relative;
+  }
+  .section-head{
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-end;
+    margin-bottom:64px;
+    flex-wrap:wrap;
+    gap:24px;
+  }
+  .section-eyebrow{
+    font-family:var(--mono);
+    font-size:0.78rem;
+    letter-spacing:0.1em;
+    text-transform:uppercase;
+    color:var(--accent);
+    margin-bottom:14px;
+    display:block;
+  }
+  .section-title{
+    font-family:var(--serif-display);
+    font-weight:600;
+    font-size:clamp(1.8rem,4vw,2.8rem);
+    letter-spacing:-0.01em;
+  }
+  .section-desc{
+    max-width:42ch;
+    color:var(--text-dim);
+    font-size:0.98rem;
+  }
+
+  .divider{
+    height:1px;
+    background:var(--card-border);
+    width:100%;
+    margin:0;
+  }
+
+  /* generic reveal-on-scroll */
+  .reveal{
+    opacity:0;
+    transform:translateY(28px);
+    transition:opacity 0.7s cubic-bezier(0.2,0.6,0.2,1), transform 0.7s cubic-bezier(0.2,0.6,0.2,1);
+  }
+  .reveal.in{
+    opacity:1;
+    transform:translateY(0);
+  }
+
+  /* ===== Mode panels ===== */
+  .mode-panel{display:none;}
+  .mode-panel.active{display:block;}
+
+  /* ===== About / skills strip ===== */
+  .about-grid{
+    display:grid;
+    grid-template-columns:1.1fr 0.9fr;
+    gap:80px;
+    align-items:start;
+  }
+  @media (max-width:900px){ .about-grid{grid-template-columns:1fr;gap:48px;} }
+
+  .about-text p{
+    color:var(--text-dim);
+    font-size:1.02rem;
+    margin-bottom:20px;
+  }
+  .about-text strong{color:var(--text);font-weight:600;}
+
+  .skill-list{display:flex;flex-direction:column;gap:4px;}
+  .skill-group{padding:18px 0;border-bottom:1px solid var(--card-border);}
+  .skill-group:last-child{border-bottom:none;}
+  .skill-group-label{
+    font-family:var(--mono);font-size:0.7rem;color:var(--text-faint);
+    text-transform:uppercase;letter-spacing:0.07em;margin-bottom:12px;display:block;
+  }
+  .skill-tags{display:flex;flex-wrap:wrap;gap:10px;}
+  .skill-tag{
+    font-family:var(--mono);font-size:0.8rem;color:var(--text);
+    padding:8px 14px;border:1px solid var(--card-border);border-radius:2px;
+    transition:border-color 0.25s, color 0.25s;
+  }
+  .skill-tag:hover{border-color:var(--accent);color:var(--accent);}
+
+  /* ===== Project cards (architecture: airy) ===== */
+  .proj-grid-arch{
+    display:grid;
+    grid-template-columns:1fr;
+    gap:6px;
+  }
+  .proj-card-arch{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:48px;
+    padding:64px 0;
+    border-bottom:1px solid var(--card-border);
+    align-items:center;
+  }
+  .proj-card-arch:last-child{border-bottom:none;}
+  .proj-card-arch.flip{direction:rtl;}
+  .proj-card-arch.flip > *{direction:ltr;}
+
+  .proj-media{
+    position:relative;
+    border-radius:3px;
+    overflow:hidden;
+    background:var(--card);
+    border:1px solid var(--card-border);
+  }
+  .proj-media img{
+    width:100%;display:block;
+    transition:transform 0.6s cubic-bezier(0.2,0.7,0.2,1);
+  }
+  .proj-media:hover img{transform:scale(1.035);}
+
+  .proj-media-stack{display:flex;flex-direction:column;gap:10px;}
+  .method-step{
+    display:flex;align-items:baseline;gap:14px;
+    font-family:var(--mono);font-size:0.84rem;color:var(--text-dim);
+    border-bottom:1px solid var(--card-border);
+    padding-bottom:14px;
+  }
+  .method-step:last-child{border-bottom:none;padding-bottom:0;}
+  .method-num{color:var(--accent);font-weight:600;flex-shrink:0;}
+  .proj-media-stack .proj-media{margin:0;}
+
+  .proj-tag{
+    font-family:var(--mono);
+    font-size:0.72rem;
+    letter-spacing:0.06em;
+    text-transform:uppercase;
+    color:var(--accent);
+    margin-bottom:14px;
+    display:block;
+  }
+  .proj-title{
+    font-family:var(--serif-display);
+    font-size:1.7rem;
+    font-weight:600;
+    margin-bottom:6px;
+    letter-spacing:-0.01em;
+  }
+  .proj-sub{
+    color:var(--text-faint);
+    font-size:0.88rem;
+    margin-bottom:20px;
+    font-family:var(--mono);
+  }
+  .proj-desc{
+    color:var(--text-dim);
+    font-size:0.96rem;
+    margin-bottom:24px;
+  }
+  .proj-stats{
+    display:flex;
+    gap:28px;
+    flex-wrap:wrap;
+    margin-bottom:24px;
+  }
+  .proj-stat{font-family:var(--mono);}
+  .proj-stat .num{font-size:1.3rem;color:var(--accent);font-weight:600;display:block;}
+  .proj-stat .lbl{font-size:0.68rem;color:var(--text-faint);text-transform:uppercase;letter-spacing:0.06em;}
+  .proj-links{display:flex;gap:14px;flex-wrap:wrap;}
+  .proj-link{
+    font-family:var(--mono);
+    font-size:0.76rem;
+    color:var(--text-dim);
+    border-bottom:1px solid var(--card-border);
+    padding-bottom:2px;
+    transition:all 0.25s;
+  }
+  .proj-link:hover{color:var(--accent);border-color:var(--accent);}
+
+  @media (max-width:900px){
+    .proj-card-arch, .proj-card-arch.flip{
+      grid-template-columns:1fr;
+      direction:ltr;
+      gap:28px;
+      padding:48px 0;
+    }
+  }
+
+  /* ===== Sports stat-dense cards ===== */
+  .stat-strip{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:1px;
+    background:var(--card-border);
+    border:1px solid var(--card-border);
+    margin-bottom:80px;
+  }
+  .stat-cell{
+    background:var(--bg);
+    padding:32px 24px;
+    text-align:center;
+  }
+  .stat-cell .num{
+    font-family:var(--serif-display);
+    font-size:2.2rem;
+    font-weight:600;
+    color:var(--accent);
+    display:block;
+  }
+  .stat-cell .lbl{
+    font-family:var(--mono);
+    font-size:0.7rem;
+    color:var(--text-faint);
+    text-transform:uppercase;
+    letter-spacing:0.05em;
+    margin-top:8px;
+  }
+  @media (max-width:760px){ .stat-strip{grid-template-columns:repeat(2,1fr);} }
+
+  .proj-grid-sports{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:24px;
+  }
+  @media (max-width:900px){ .proj-grid-sports{grid-template-columns:1fr;} }
+
+  .sport-card{
+    background:var(--card);
+    border:1px solid var(--card-border);
+    padding:36px;
+    border-radius:3px;
+    transition:border-color 0.3s, transform 0.3s;
+    display:flex;
+    flex-direction:column;
+  }
+  .sport-card:hover{border-color:var(--accent-dim);transform:translateY(-4px);}
+  .sport-card-head{
+    display:flex;justify-content:space-between;align-items:flex-start;
+    margin-bottom:18px;
+  }
+  .sport-status{
+    font-family:var(--mono);
+    font-size:0.66rem;
+    text-transform:uppercase;
+    letter-spacing:0.05em;
+    padding:5px 10px;
+    border-radius:20px;
+    border:1px solid var(--accent-dim);
+    color:var(--accent);
+  }
+  .sport-card h3{
+    font-family:var(--serif-display);
+    font-size:1.3rem;
+    font-weight:600;
+    margin-bottom:10px;
+  }
+  .sport-card p{color:var(--text-dim);font-size:0.92rem;margin-bottom:18px;flex-grow:1;}
+  .sport-meta{
+    display:flex;gap:18px;font-family:var(--mono);font-size:0.72rem;color:var(--text-faint);
+    border-top:1px solid var(--card-border);
+    padding-top:16px;
+  }
+
+  /* ===== Draft board ===== */
+  .board-method{
+    max-width:68ch;
+    color:var(--text-dim);
+    font-size:0.95rem;
+    margin-bottom:56px;
+    padding-bottom:40px;
+    border-bottom:1px solid var(--card-border);
+  }
+  .tier-block{margin-bottom:56px;}
+  .tier-head{
+    display:flex;
+    align-items:baseline;
+    gap:18px;
+    margin-bottom:24px;
+    flex-wrap:wrap;
+  }
+  .tier-label{
+    font-family:var(--mono);
+    font-size:0.72rem;
+    text-transform:uppercase;
+    letter-spacing:0.06em;
+    padding:6px 14px;
+    border-radius:20px;
+    font-weight:600;
+    white-space:nowrap;
+  }
+  .tier-label.tier-1{background:var(--cyan);color:#04141a;}
+  .tier-label.tier-2{background:var(--card);border:1px solid var(--cyan-dim);color:var(--cyan);}
+  .tier-label.tier-wilson{background:var(--card);border:1px solid var(--cyan);color:var(--cyan-bright);}
+  .tier-desc{color:var(--text-faint);font-size:0.86rem;max-width:54ch;}
+
+  .player-card{
+    background:var(--card);
+    border:1px solid var(--card-border);
+    border-radius:3px;
+    padding:28px 32px;
+    margin-bottom:14px;
+  }
+  .player-card-top{
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-start;
+    gap:16px;
+    margin-bottom:16px;
+    flex-wrap:wrap;
+  }
+  .player-rank{
+    font-family:var(--mono);
+    color:var(--text-faint);
+    font-size:0.9rem;
+    margin-right:14px;
+  }
+  .player-name{
+    font-family:var(--serif-display);
+    font-size:1.25rem;
+    font-weight:600;
+    margin-right:14px;
+  }
+  .player-meta{
+    font-family:var(--mono);
+    font-size:0.78rem;
+    color:var(--text-faint);
+  }
+  .value-tag{
+    font-family:var(--mono);
+    font-size:0.68rem;
+    text-transform:uppercase;
+    letter-spacing:0.05em;
+    padding:6px 12px;
+    border-radius:20px;
+    white-space:nowrap;
+  }
+  .value-elite{background:var(--cyan);color:#04141a;font-weight:600;}
+  .value-high{background:var(--cyan-dim);color:var(--cyan-bright);border:1px solid var(--cyan);}
+  .value-mid{background:var(--card-border);color:var(--text-dim);}
+  .value-watch{background:transparent;color:var(--text-faint);border:1px solid var(--card-border);}
+  .player-blurb{color:var(--text-dim);font-size:0.92rem;margin-bottom:18px;}
+  .player-stats{
+    display:flex;
+    gap:22px;
+    flex-wrap:wrap;
+    font-family:var(--mono);
+    font-size:0.78rem;
+    color:var(--text-dim);
+    border-top:1px solid var(--card-border);
+    padding-top:14px;
+  }
+  .player-stats b{color:var(--accent);margin-right:4px;}
+  .board-footnote{
+    font-family:var(--mono);
+    font-size:0.74rem;
+    color:var(--text-faint);
+    margin-top:24px;
+  }
+
+  /* ===== Writing list ===== */
+  .write-list{display:flex;flex-direction:column;}
+
+  .featured-paper{
+    border:1px solid var(--card-border);
+    border-radius:3px;
+    padding:40px;
+    margin-bottom:32px;
+    background:var(--card);
+  }
+  .featured-label{
+    font-family:var(--mono);font-size:0.7rem;text-transform:uppercase;letter-spacing:0.07em;
+    color:var(--accent);display:block;margin-bottom:14px;
+  }
+  .featured-title{
+    font-family:var(--serif-display);font-size:1.4rem;font-weight:600;margin-bottom:14px;max-width:42ch;
+  }
+  .featured-blurb{color:var(--text-dim);font-size:0.95rem;margin-bottom:22px;max-width:62ch;}
+
+  .paper-title-list{
+    border-top:1px solid var(--card-border);
+    padding-top:28px;
+  }
+  .paper-list-label{
+    font-family:var(--mono);font-size:0.7rem;text-transform:uppercase;letter-spacing:0.06em;
+    color:var(--text-faint);display:block;margin-bottom:18px;
+  }
+  .paper-title-row{
+    font-family:var(--serif-display);font-size:1rem;color:var(--text-dim);
+    padding:14px 0;border-bottom:1px solid var(--card-border);
+  }
+  .paper-title-row:last-child{border-bottom:none;}
+  .write-item-wrap{border-bottom:1px solid var(--card-border);}
+  .write-item-wrap:last-child{border-bottom:none;}
+  .write-item{
+    display:grid;
+    grid-template-columns:120px 1fr auto;
+    gap:24px;
+    align-items:baseline;
+    padding:26px 0 14px;
+    cursor:pointer;
+    transition:padding-left 0.3s;
+  }
+  .write-item:hover{padding-left:8px;}
+  .write-item:hover .write-title{color:var(--accent);}
+  .write-date{font-family:var(--mono);font-size:0.76rem;color:var(--text-faint);}
+  .write-title{font-family:var(--serif-display);font-size:1.15rem;font-weight:500;transition:color 0.25s;}
+  .write-tag{font-family:var(--mono);font-size:0.68rem;color:var(--text-faint);text-transform:uppercase;white-space:nowrap;}
+  .write-download{
+    display:inline-block;
+    font-family:var(--mono);
+    font-size:0.74rem;
+    color:var(--accent);
+    margin:0 0 22px 144px;
+    border-bottom:1px solid var(--accent-dim);
+    padding-bottom:2px;
+    transition:opacity 0.2s;
+  }
+  .write-download:hover{opacity:0.7;}
+  @media (max-width:700px){
+    .write-item{grid-template-columns:1fr;gap:6px;}
+    .write-download{margin-left:0;}
+  }
+
+  .citation-block{
+    margin-top:14px;
+    font-family:var(--mono);
+    font-size:0.74rem;
+    color:var(--text-faint);
+    line-height:1.7;
+    border-left:2px solid var(--card-border);
+    padding-left:16px;
+    display:none;
+  }
+  .write-item.expanded .citation-block{display:block;margin-top:18px;}
+  .write-blurb{
+    font-family:var(--body);
+    font-size:0.88rem;
+    color:var(--text-dim);
+    margin-bottom:16px;
+    line-height:1.6;
+  }
+  .citation-label{
+    color:var(--text-dim);
+    text-transform:uppercase;
+    letter-spacing:0.06em;
+    font-size:0.66rem;
+    margin-bottom:8px;
+    display:block;
+  }
+
+  /* ===== Experience ===== */
+  .exp-list{display:flex;flex-direction:column;gap:0;}
+  .resume-block{
+    border-bottom:1px solid var(--card-border);
+    padding:36px 0;
+  }
+  .resume-block-label{
+    font-family:var(--mono);font-size:0.72rem;text-transform:uppercase;letter-spacing:0.07em;
+    color:var(--accent);display:block;margin-bottom:22px;
+  }
+  .skill-detail-grid{
+    display:grid;grid-template-columns:1fr 1fr;gap:32px;
+  }
+  @media (max-width:760px){ .skill-detail-grid{grid-template-columns:1fr;} }
+  .skill-detail h4{
+    font-family:var(--serif-display);font-size:1.05rem;font-weight:600;margin-bottom:10px;
+  }
+  .skill-detail p{color:var(--text-dim);font-size:0.92rem;}
+  .exp-item{
+    display:grid;
+    grid-template-columns:200px 1fr;
+    gap:32px;
+    padding:36px 0;
+    border-bottom:1px solid var(--card-border);
+  }
+  .exp-item:last-child{border-bottom:none;}
+  .exp-period{font-family:var(--mono);font-size:0.78rem;color:var(--text-faint);}
+  .exp-role{font-family:var(--serif-display);font-size:1.2rem;font-weight:600;margin-bottom:4px;}
+  .exp-org{color:var(--accent);font-size:0.9rem;margin-bottom:14px;font-family:var(--mono);}
+  .exp-item ul{padding-left:18px;color:var(--text-dim);font-size:0.92rem;}
+  .exp-item li{margin-bottom:8px;}
+  @media (max-width:760px){ .exp-item{grid-template-columns:1fr;gap:10px;} }
+
+  /* ===== Footer / contact ===== */
+  footer{
+    padding:100px 5vw 60px;
+    border-top:1px solid var(--card-border);
+  }
+  .footer-grid{
+    display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:40px;
+    margin-bottom:60px;
+  }
+  .footer-title{
+    font-family:var(--serif-display);
+    font-size:clamp(1.8rem,4vw,3rem);
+    font-weight:600;
+    max-width:14ch;
+  }
+  .footer-links{display:flex;flex-direction:column;gap:10px;align-items:flex-end;}
+  .footer-links a{font-family:var(--mono);font-size:0.86rem;color:var(--text-dim);transition:color 0.25s;}
+  .footer-links a:hover{color:var(--accent);}
+  .footer-bottom{
+    display:flex;justify-content:space-between;color:var(--text-faint);font-family:var(--mono);font-size:0.74rem;flex-wrap:wrap;gap:12px;
+  }
+
+  /* lightbox */
+  .lightbox{
+    position:fixed;inset:0;background:rgba(8,8,9,0.94);
+    display:none;align-items:center;justify-content:center;
+    z-index:1000;padding:40px;cursor:zoom-out;
+  }
+  .lightbox.active{display:flex;}
+  .lightbox img{max-width:92vw;max-height:88vh;border-radius:2px;box-shadow:0 30px 80px rgba(0,0,0,0.6);}
+
+  .img-caption{
+    font-family:var(--mono);
+    font-size:0.7rem;
+    color:var(--text-faint);
+    margin-top:10px;
+    padding:0 2px;
+  }
+
+  .clickable-media{cursor:zoom-in;}
+
+  body.mode-sports .nav-about-link{display:none;}
+</style>
+</head>
+<body>
+
+<div class="lightbox" id="lightbox"><img id="lightbox-img" src="" alt=""></div>
+
+<nav class="topnav">
+  <div class="nav-name"><span class="nav-dot"></span>Colin Murray</div>
+  <div class="nav-links">
+    <a href="#about" class="nav-about-link">About</a>
+    <a href="#projects">Projects</a>
+    <a href="#writing">Writing</a>
+    <a href="#experience">Experience</a>
+    <a href="#contact">Contact</a>
+  </div>
+  <div class="toggle" id="modeToggle">
+    <div class="toggle-opt active" data-mode="arch">Arch. Eng.</div>
+    <div class="toggle-opt" data-mode="sports">Sports Analytics</div>
+  </div>
+</nav>
+
+<!-- ============ HERO ============ -->
+<section class="hero" style="padding-bottom:0;">
+  <div class="hero-split-line"></div>
+
+  <!-- ARCH HERO -->
+  <div class="mode-panel active" data-mode="arch">
+    <div class="hero-eyebrow">Architectural Conservation &amp; Sustainability Engineering · Carleton University</div>
+    <h1>Colin Murray</h1>
+    <p class="hero-sub">4th-year Architectural Conservation and Sustainability Engineering student at Carleton University, focused on building performance simulation, envelope design, and structural analysis.</p>
+    <div class="hero-meta-row">
+      <div class="hero-meta-item"><span class="label">Program</span><span class="value">B.Eng, Arch. Conservation &amp; Sustainability Eng.</span></div>
+      <div class="hero-meta-item"><span class="label">Institution</span><span class="value">Carleton University</span></div>
+      <div class="hero-meta-item"><span class="label">Graduating</span><span class="value">April 2027</span></div>
+      <div class="hero-meta-item"><span class="label">Available</span><span class="value">Part-time or Full-time</span></div>
+    </div>
+    <div class="hero-cta-row">
+      <a href="#projects" class="btn btn-primary">View Projects</a>
+      <a href="#contact" class="btn btn-outline">Get in Touch</a>
+    </div>
+  </div>
+
+  <!-- SPORTS HERO -->
+  <div class="mode-panel" data-mode="sports">
+    <div class="hero-eyebrow">Sports Analytics &amp; Scouting</div>
+    <h1>Colin Murray</h1>
+    <p class="hero-sub">Applying an engineering background in modeling and statistical analysis to player evaluation, draft analysis, and team strategy research — primarily MLB, with NBA and NHL work as well.</p>
+    <div class="hero-meta-row">
+      <div class="hero-meta-item"><span class="label">Background</span><span class="value">Architectural Engineering</span></div>
+      <div class="hero-meta-item"><span class="label">Tools</span><span class="value">Python · Excel · Advanced Stats</span></div>
+    </div>
+    <div class="hero-cta-row">
+      <a href="#projects" class="btn btn-primary">View Projects</a>
+      <a href="#contact" class="btn btn-outline">Get in Touch</a>
+    </div>
+  </div>
+  <div class="mode-panel" data-mode="sports">
+    <div class="section-head reveal">
+      <div>
+        <span class="section-eyebrow">Approach</span>
+        <h2 class="section-title">What I'm Applying</h2>
+      </div>
+    </div>
+    <div class="resume-block reveal" style="border-bottom:none;">
+      <div class="skill-detail-grid">
+        <div class="skill-detail">
+          <h4>Statistical Modeling</h4>
+          <p>Building models that test a specific question against the data rather than starting from a conclusion — the same approach used for calibrating a building energy model against measured consumption.</p>
+        </div>
+        <div class="skill-detail">
+          <h4>Uncertainty Analysis</h4>
+          <p>Knowing when a sample size is too small to support a claim, and reporting a range or a confidence level instead of a single number presented as fact.</p>
+        </div>
+        <div class="skill-detail">
+          <h4>Scouting &amp; Player Evaluation</h4>
+          <p>Reading tools and translatable skills, not just box-score production — what holds up against better competition and what doesn't.</p>
+        </div>
+        <div class="skill-detail">
+          <h4>Data Visualization</h4>
+          <p>Presenting a stat in the context that actually explains it — usage rate next to efficiency, not either number alone.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</section>
+
+<!-- ============ ABOUT ============ -->
+<section id="about">
+  <div class="divider reveal"></div>
+  <div style="height:64px;"></div>
+
+  <div class="mode-panel active" data-mode="arch">
+    <div class="section-head reveal">
+      <div>
+        <span class="section-eyebrow">01 · About</span>
+        <h2 class="section-title">About</h2>
+      </div>
+    </div>
+    <div class="about-grid">
+      <div class="about-text reveal">
+        <p>I'm <strong>Colin Murray</strong>, a 4th-year Architectural Conservation and Sustainability Engineering student at <strong>Carleton University</strong>, graduating April 2027. Most of my work lives in Revit and building performance simulation — modeling existing envelopes, calibrating energy models against real consumption data, and redesigning assemblies for thermal performance and embodied carbon.</p>
+        <p>That shows up across the projects on this site: a full Revit drawing set for a residential coach house, a forensic envelope study and redesign of Alvar Aalto's Experimental House, a façade design validated against a physical heliodon model, and an EnergyPlus model calibrated against measured building data and pushed toward a net-zero pathway.</p>
+        <p>Available for part-time or full-time work. Fluent in English, working proficiency in French.</p>
+      </div>
+      <div class="skill-list reveal">
+        <div class="skill-group">
+          <span class="skill-group-label">Modeling &amp; Simulation</span>
+          <div class="skill-tags">
+            <span class="skill-tag">Revit</span>
+            <span class="skill-tag">Inventor</span>
+            <span class="skill-tag">Fusion 360</span>
+            <span class="skill-tag">EnergyPlus</span>
+            <span class="skill-tag">OpenStudio</span>
+            <span class="skill-tag">LBNL THERM / WINDOW</span>
+            <span class="skill-tag">Climate Consultant</span>
+          </div>
+        </div>
+        <div class="skill-group">
+          <span class="skill-group-label">Analysis &amp; Computation</span>
+          <div class="skill-tags">
+            <span class="skill-tag">Python</span>
+            <span class="skill-tag">Building Performance Simulation</span>
+            <span class="skill-tag">Uncertainty Analysis</span>
+            <span class="skill-tag">Structural Calculations</span>
+          </div>
+        </div>
+        <div class="skill-group">
+          <span class="skill-group-label">Documentation &amp; Drafting</span>
+          <div class="skill-tags">
+            <span class="skill-tag">2D Orthographic / Isometric Drawing</span>
+            <span class="skill-tag">Construction Documentation</span>
+            <span class="skill-tag">Microsoft Office</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</section>
+
+<!-- ============ PROJECTS ============ -->
+<section id="projects" style="padding-top:0;">
+  <div class="divider reveal"></div>
+  <div style="height:64px;"></div>
+
+  <!-- ===== ARCH PROJECTS ===== -->
+  <div class="mode-panel active" data-mode="arch">
+    <div class="section-head reveal">
+      <div>
+        <span class="section-eyebrow">02 · Selected Work</span>
+        <h2 class="section-title">Projects</h2>
+      </div>
+    </div>
+
+    <div class="proj-grid-arch">
+
+      <!-- Aalto Experimental House -->
+      <div class="proj-card-arch reveal">
+        <div class="proj-media-stack">
+          <div class="proj-media clickable-media" onclick="openLightbox('images/aalto-axo.jpg')"><img src="images/aalto-axo.jpg" alt="Experimental House axonometric and floor plans, original Revit model by Colin Murray"></div>
+          <div class="proj-media clickable-media" onclick="openLightbox('images/aalto-window-colin.jpg')"><img src="images/aalto-window-colin.jpg" alt="Original vs. redesigned window assembly, by Colin Murray"></div>
+        </div>
+        <div>
+          <span class="proj-tag">ARCC 2203 — Architectural Technology II</span>
+          <h3 class="proj-title">Experimental House Envelope Re(design)</h3>
+          <p class="proj-sub">Alvar Aalto, Muuratsalo, Finland (1953) — Group of 6, Carleton University</p>
+          <p class="proj-desc">I built the original Revit model of the entire house from drawings and site photos, which the rest of the group's analysis was built on top of. The group then mapped the original wall, roof, window, and floor assemblies and redesigned each for thermal performance and embodied carbon, with UA-value compliance checked against the 2020 IECC residential code, a full life-cycle assessment, and a climate-relocation study. My own sheets covered the window assembly and the timber/brick material sourcing research: modeling the original 1950s double-sash window against a redesigned triple-glazed, low-E, argon-filled assembly, and documenting the timber sourcing and milling chain.</p>
+          <div class="proj-stats">
+            <div class="proj-stat"><span class="num">2.81 → 1.68 W/m²K</span><span class="lbl">Window U-Factor, Original → Redesign</span></div>
+            <div class="proj-stat"><span class="num">0.339 → 1.54</span><span class="lbl">Window R-Value [m²K/W]</span></div>
+          </div>
+          <div class="proj-links">
+            <a class="proj-link" href="papers/aalto-experimental-house-drawings.pdf" target="_blank">View Full Revit Drawing Set ↗</a>
+            <a class="proj-link" href="papers/aalto-experimental-house-full-set.pdf" target="_blank">View Full Envelope Analysis ↗</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Green Building Design Facade -->
+      <div class="proj-card-arch flip reveal">
+        <div class="proj-media-stack">
+          <div class="proj-media clickable-media" onclick="openLightbox('images/gbd-render1.jpg')"><img src="images/gbd-render1.jpg" alt="Triple-glazed argon-filled window assembly with low-E coating"></div>
+        </div>
+        <div>
+          <span class="proj-tag">ACSE 4105 / ENVE 3105 — Green Building Design</span>
+          <h3 class="proj-title">South-Facing Façade for Net-Zero Performance</h3>
+          <p class="proj-sub">Group 15 — Ottawa climate-responsive home façade</p>
+          <p class="proj-desc">Designed a south-facing residential façade combining advanced envelope insulation, triple-glazed low-E argon windows, and an overhang/side-fin shading system tuned to Ottawa's solar geometry. Physical 1:30 scale model validated against a heliodon, confirming full shading 9am–3pm from May–July and full solar penetration in December. PV array sized using PVWatts and linear interpolation to exceed the 500 kWh/year generation target.</p>
+          <div class="proj-stats">
+            <div class="proj-stat"><span class="num">632 kWh/yr</span><span class="lbl">PV Generation (target: 500)</span></div>
+            <div class="proj-stat"><span class="num">5.86 m²K/W</span><span class="lbl">Wall R-Value (exceeds ASHRAE)</span></div>
+            <div class="proj-stat"><span class="num">0.14 W/m²K</span><span class="lbl">U-Value</span></div>
+          </div>
+          <div class="proj-links">
+            <a class="proj-link" href="papers/gbd-facade-report.pdf" target="_blank">View Full Report ↗</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Building Services Engineering Final -->
+      <div class="proj-card-arch reveal">
+        <div class="proj-media-stack">
+          <div class="proj-media" style="padding:36px 32px;min-height:220px;display:flex;flex-direction:column;justify-content:center;gap:14px;">
+            <div class="method-step"><span class="method-num">01</span>Baseline EnergyPlus model of the Canal Building, Ottawa</div>
+            <div class="method-step"><span class="method-num">02</span>Lighting, envelope, plug-load, PV, and heat pump retrofits modeled independently</div>
+            <div class="method-step"><span class="method-num">03</span>Retrofits combined and checked for interaction effects vs. sum-of-parts</div>
+            <div class="method-step"><span class="method-num">04</span>GHG and carbon tax payback modeled under Federal vs. hourly grid scenarios</div>
+          </div>
+        </div>
+        <div>
+          <span class="proj-tag">ACSE 4107A — Building Services Engineering</span>
+          <h3 class="proj-title">EnergyPlus Net-Zero Pathway &amp; Carbon Tax Analysis</h3>
+          <p class="proj-sub">Python + EnergyPlus model — the Canal Building, Ottawa</p>
+          <p class="proj-desc">Built a full EnergyPlus/Python upgrade-pathway model evaluating lighting, envelope, plug-load, PV, and heat pump retrofits both independently and combined, quantifying interaction effects between upgrades (sum-of-parts vs. whole-building, 2.05% discrepancy). Modeled GHG emissions under Federal vs. hourly "Max" grid-intensity scenarios, evaluated carbon tax payback at $0/$80/$170 per tonne, and demonstrated a fully net-zero EUI pathway combining a 70% lighting reduction with 50% roof-coverage PV.</p>
+          <div class="proj-stats">
+            <div class="proj-stat"><span class="num">61 kWh/m²</span><span class="lbl">Heat Pump (COP 5) Savings</span></div>
+            <div class="proj-stat"><span class="num">17.6 yrs</span><span class="lbl">Mech. Upgrade Payback @ $170/t</span></div>
+            <div class="proj-stat"><span class="num">124 hrs</span><span class="lbl">Self-Power Needed for 15% GHG Cut</span></div>
+          </div>
+          <div class="proj-links">
+            <a class="proj-link" href="code/building-services-net-zero-model.ipynb" target="_blank">View Jupyter Notebook ↗</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- BPS Calibration -->
+      <div class="proj-card-arch flip reveal">
+        <div class="proj-media-stack">
+          <div class="proj-media" style="padding:32px;display:flex;align-items:center;justify-content:center;min-height:220px;">
+            <div style="font-family:var(--mono);font-size:0.82rem;color:var(--text-dim);line-height:2;">
+              <div>NATURAL GAS CV(RMSE): <span style="color:var(--accent)">12.18%</span></div>
+              <div>ELECTRICITY CV(RMSE): <span style="color:var(--accent)">144.03%</span></div>
+              <div>ASHRAE GUIDELINE 14 LIMIT: <span style="color:var(--accent)">15%</span></div>
+              <div>COMBINED STRATEGY ELEC. CUT: <span style="color:var(--accent)">40%</span></div>
+            </div>
+          </div>
+        </div>
+        <div>
+          <span class="proj-tag">ACSE 3201 — Building Performance Simulation</span>
+          <h3 class="proj-title">Model Calibration &amp; Energy Improvement Strategy</h3>
+          <p class="proj-sub">OpenStudio / EnergyPlus — calibration against measured building data</p>
+          <p class="proj-desc">Calibrated an OpenStudio model against measured natural gas and electricity consumption through three rounds of iteration on solar/thermal absorptance, internal gains, and infiltration, then checked the result against ASHRAE Guideline 14 thresholds for CV(RMSE) and nMBE. The natural gas calibration cleared the 15% CV(RMSE) threshold; electricity came in far over, which traced back to the ideal-loads HVAC simplification removing equipment cycling losses and overstating summer cooling. Phase II tested LED lighting, plug-load scheduling, and wall insulation upgrades both separately and combined, cutting electricity use from 129 GJ/yr to 77.3 GJ/yr with natural gas held close to baseline.</p>
+          <div class="proj-stats">
+            <div class="proj-stat"><span class="num">76.6 → 80 GJ</span><span class="lbl">Natural Gas, Baseline → Combined Strategy</span></div>
+            <div class="proj-stat"><span class="num">129 → 77.3 GJ</span><span class="lbl">Electricity, Baseline → Combined Strategy</span></div>
+          </div>
+          <div class="proj-links">
+            <a class="proj-link" href="code/bps-calibrated-model.osm" target="_blank">Download Calibrated Model (.osm) ↗</a>
+            <a class="proj-link" href="code/bps-phase2-improvements-model.osm" target="_blank">Download Phase II Model (.osm) ↗</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Coach House Project -->
+      <div class="proj-card-arch reveal">
+        <div class="proj-media-stack">
+          <div class="proj-media clickable-media" onclick="openLightbox('images/coachhouse-render.jpg')"><img src="images/coachhouse-render.jpg" alt="Coach House Revit exterior render"></div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+            <div class="proj-media clickable-media" onclick="openLightbox('images/coachhouse-plan.jpg')"><img src="images/coachhouse-plan.jpg" alt="Coach House floor plans"></div>
+            <div class="proj-media clickable-media" onclick="openLightbox('images/coachhouse-section.jpg')"><img src="images/coachhouse-section.jpg" alt="Coach House section view"></div>
+          </div>
+        </div>
+        <div>
+          <span class="proj-tag">Revit / Autodesk Documentation — Group 05</span>
+          <h3 class="proj-title">Coach House Project — Construction Documentation Set</h3>
+          <p class="proj-sub">Drawn by Colin Murray — early Revit and documentation practice</p>
+          <p class="proj-desc">An early Revit exercise focused on construction documentation conventions rather than design: a massing render, two-level floor plans, a building section, and a 1:10 wall detail specifying the brick veneer / air gap / blockwork / insulation assembly, all set up with proper title blocks, scales, and revision schedules. Useful mainly as a record of learning the actual drafting standards architecture firms expect, before applying them to the more developed projects elsewhere on this page.</p>
+          <div class="proj-links">
+            <a class="proj-link" onclick="openLightbox('images/coachhouse-walldetail.jpg')">View Wall Detail (1:10) ↗</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Troitsky Bridge -->
+      <div class="proj-card-arch flip reveal">
+        <div class="proj-media-stack">
+          <div class="proj-media clickable-media" onclick="openLightbox('images/bridge-final.jpg')"><img src="images/bridge-final.jpg" alt="Completed tied-arch popsicle stick bridge"></div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+            <div class="proj-media clickable-media" onclick="openLightbox('images/bridge-arches.jpg')"><img src="images/bridge-arches.jpg" alt="Bridge arches under construction"></div>
+            <div class="proj-media clickable-media" onclick="openLightbox('images/bridge-build.jpg')"><img src="images/bridge-build.jpg" alt="Bridge build process"></div>
+          </div>
+        </div>
+        <div>
+          <span class="proj-tag">Troitsky Bridge Competition — Team BridgeBusters</span>
+          <h3 class="proj-title">Tied-Arch Bridge — Structural Design &amp; Build</h3>
+          <p class="proj-sub">Carleton University — Team Captain &amp; Design Lead, 6-person team</p>
+          <p class="proj-desc">As team captain and design lead of a 6-person competition team, I handled the structural design itself, the team's back-end logistics (accounting and setup, coordinated with Carleton's club leads), and the written reports — while running the overall process by phone and in person with the rest of the team. The bridge itself is a popsicle-stick tied-arch using Nielsen-type hanger geometry to minimize deflection and vertical force. Each arch was laminated from roughly 20 layers of sticks, cut and sanded to a drawn boundary, with braided dental-floss cables acting as the tension hangers. Iterated the arch connection detail mid-build for both bandsaw manufacturability and aesthetics, and added a third deck support after identifying deflection instability as a likely point of failure.</p>
+          <div class="proj-stats">
+            <div class="proj-stat"><span class="num">505 kg</span><span class="lbl">Predicted Load Capacity</span></div>
+            <div class="proj-stat"><span class="num">+5%</span><span class="lbl">vs. Prior Year Reference Design (481 kg)</span></div>
+            <div class="proj-stat"><span class="num">~20</span><span class="lbl">Laminated Layers per Arch</span></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ===== SPORTS PROJECTS ===== -->
+  <div class="mode-panel" data-mode="sports">
+    <div class="section-head reveal">
+      <div>
+        <span class="section-eyebrow">02 · Active Research</span>
+        <h2 class="section-title">Projects</h2>
+      </div>
+      <p class="section-desc">Original analysis, updated as each project moves from data pull to write-up.</p>
+    </div>
+
+    <div class="stat-strip reveal">
+      <div class="stat-cell"><span class="num">2</span><span class="lbl">Active Research Projects</span></div>
+      <div class="stat-cell"><span class="num">2</span><span class="lbl">Projects in Pipeline</span></div>
+    </div>
+
+    <div class="proj-grid-sports">
+
+      <div class="sport-card reveal">
+        <div class="sport-card-head">
+          <h3>Familiarity at the Plate: Blue Jays vs. Scouted Pitching</h3>
+          <span class="sport-status">In Progress</span>
+        </div>
+        <p>Tests whether Toronto's offense performs significantly better against starters they've faced multiple times in a season versus first-time or late call-up starters, using Statcast PA-level outcomes (xwOBA, wRC+) rather than surface ERA splits. Motivated by the Jays' 2025 run — strong against scouted, regularly-seen aces, apparently vulnerable to unfamiliar call-ups.</p>
+        <div class="sport-meta">
+          <span>Tool: Python</span>
+          <span>Source: Baseball Savant</span>
+        </div>
+      </div>
+
+      <div class="sport-card reveal">
+        <div class="sport-card-head">
+          <h3>AI-Powered Draft Value Model</h3>
+          <span class="sport-status">Planned</span>
+        </div>
+        <p>A model that takes publicly available pre-draft Statcast and scouting metrics (exit velocity, barrel %, spin rate, FV grades) and outputs a value-over-slot score for an upcoming draft class, benchmarked against historical outcomes.</p>
+        <div class="sport-meta">
+          <span>Tool: Python</span>
+          <span>Output: GitHub-hosted model</span>
+        </div>
+      </div>
+
+      <div class="sport-card reveal">
+        <div class="sport-card-head">
+          <h3>2026 NBA Draft Big Board</h3>
+          <span class="sport-status">In Progress</span>
+        </div>
+        <p>A tiered big board for the 2026 NBA draft class, ranked on scalability and projected playoff/analytical value rather than raw counting stats — built from per-36 advanced numbers (BPM, true shooting, usage). Full board with player breakdowns below.</p>
+        <div class="sport-meta">
+          <span>Source: Tankathon advanced stats</span>
+        </div>
+      </div>
+
+      <div class="sport-card reveal">
+        <div class="sport-card-head">
+          <h3>The Popkins Effect — Blue Jays Offensive Turnaround</h3>
+          <span class="sport-status">Planned</span>
+        </div>
+        <p>A written piece on how new hitting coach David Popkins helped move Toronto's offense from 23rd to 4th in runs scored with largely the same roster — and what that says about preparation-driven performance versus personnel.</p>
+        <div class="sport-meta">
+          <span>Format: Long-form article</span>
+        </div>
+      </div>
+
+    </div>
+
+    <div style="height:90px;"></div>
+    <div class="section-head reveal">
+      <div>
+        <span class="section-eyebrow">2026 NBA Draft</span>
+        <h2 class="section-title">Big Board — Scalability &amp; Playoff Value</h2>
+      </div>
+      <p class="section-desc">Ranked by how well each player's production translates to a winning lineup. Tiers reflect floor/ceiling read, not just where scouts have them.</p>
+    </div>
+
+    <div class="board-method reveal">
+      <p>Stats are per-36 minutes from Tankathon's 2026 big board. The question driving the tiers isn't just who's the best prospect — it's whether a player's value holds up in a reduced or complementary role on a good team, which is what playoff basketball actually demands. Usage rate matters here: a player posting big numbers on 33% usage is doing something different than one posting similar numbers at 23%. BPM, TS%, and the defensive split (DBPM) are the anchors. Per-game counting stats (PTS, AST, BLK, STL) are listed for context.</p>
+    </div>
+
+    <!-- TIER 1 -->
+    <div class="tier-block reveal">
+      <div class="tier-head">
+        <span class="tier-label tier-1">Tier 1 — My Top 2–3</span>
+        <span class="tier-desc">Boozer, Peterson, Dybantsa. Each brings a different profile, but all three have the advanced numbers and physical tools to scale into a real featured role.</span>
+      </div>
+
+      <div class="player-card">
+        <div class="player-card-top">
+          <div>
+            <span class="player-rank">1</span>
+            <span class="player-name">Cameron Boozer</span>
+            <span class="player-meta">PF · Duke · 6'9.5" 253lbs · 18 yrs</span>
+          </div>
+          <span class="value-tag value-elite">Elite</span>
+        </div>
+        <p class="player-blurb">His BPM of 18.7 is historically elite for an 18-year-old — only Zion Williamson has posted a higher number at that age. The part that doesn't show up in that single number: it came at a real, shared usage rate (29.9%), not inflated by being the only option on a bad team. Floor is a serious starter who can affect playoff games from day one — the shooting, IQ, and size combination means he doesn't need the offense designed around him to be useful. Ceiling is harder to pin down, but yearly All-NBA is a realistic discussion.</p>
+        <div class="player-stats">
+          <span><b>PTS</b> 24.2</span>
+          <span><b>AST</b> 4.4</span>
+          <span><b>BLK</b> 0.7</span>
+          <span><b>STL</b> 1.5</span>
+          <span><b>BPM</b> 18.7</span>
+          <span><b>TS%</b> 65.3</span>
+          <span><b>USG</b> 29.9</span>
+          <span><b>DBPM</b> 6.0</span>
+        </div>
+      </div>
+
+      <div class="player-card">
+        <div class="player-card-top">
+          <div>
+            <span class="player-rank">2</span>
+            <span class="player-name">Darryn Peterson</span>
+            <span class="player-meta">SG/PG · Kansas · 6'5.75" 199lbs · 19 yrs</span>
+          </div>
+          <span class="value-tag value-elite">Elite</span>
+        </div>
+        <p class="player-blurb">The highest usage rate in the top four (33.5%) and a BPM of 14.1 that holds up under it — high-volume shot creation that still comes out positive on both sides of the ball. True shooting at 57.8% is the one number that lags the others at that workload, but that's the kind of thing that typically improves as the players around you get better. Floor is a reliable second option or high-usage guard on a good team. Ceiling is legitimate star — one of the most advanced offensive freshmen in recent memory.</p>
+        <div class="player-stats">
+          <span><b>PTS</b> 20.2</span>
+          <span><b>AST</b> 1.6</span>
+          <span><b>BLK</b> 0.6</span>
+          <span><b>STL</b> 1.4</span>
+          <span><b>BPM</b> 14.1</span>
+          <span><b>TS%</b> 57.8</span>
+          <span><b>USG</b> 33.5</span>
+        </div>
+      </div>
+
+      <div class="player-card">
+        <div class="player-card-top">
+          <div>
+            <span class="player-rank">3</span>
+            <span class="player-name">AJ Dybantsa</span>
+            <span class="player-meta">SF · BYU · 6'9.75" 217lbs · 18 yrs</span>
+          </div>
+          <span class="value-tag value-elite">Elite</span>
+        </div>
+        <p class="player-blurb">Led the nation at 25.5 points per game, and the size (6'10" wing with three-level scoring) is why the production is scalable — a guard doing this would face more matchup questions at the next level. BPM of 11.7 is solid but the lowest of this tier, driven almost entirely by the offensive number. The defensive activity (DBPM 2.2) needs to catch up for the two-way profile to match the rest of this group — that's the swing variable on ceiling. Floor is a high-usage wing scorer. Ceiling is franchise player if the defense develops.</p>
+        <div class="player-stats">
+          <span><b>PTS</b> 26.4</span>
+          <span><b>AST</b> 3.8</span>
+          <span><b>BLK</b> 0.4</span>
+          <span><b>STL</b> 1.1</span>
+          <span><b>BPM</b> 11.7</span>
+          <span><b>TS%</b> 60.0</span>
+          <span><b>USG</b> 33.9</span>
+          <span><b>DBPM</b> 2.2</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- CALEB WILSON TIER -->
+    <div class="tier-block reveal">
+      <div class="tier-head">
+        <span class="tier-label tier-wilson">High Potential</span>
+        <span class="tier-desc">Caleb Wilson. Missed the final month with hand injuries, but the two-way profile is real and some scouts have him top-3. Giving him his own tier because the ceiling read is genuinely different from the Tier 2 group.</span>
+      </div>
+
+      <div class="player-card">
+        <div class="player-card-top">
+          <div>
+            <span class="player-rank">4</span>
+            <span class="player-name">Caleb Wilson</span>
+            <span class="player-meta">SF/PF · North Carolina · 6'10.5" 211lbs · 19 yrs</span>
+          </div>
+          <span class="value-tag value-high">High Potential</span>
+        </div>
+        <p class="player-blurb">Best two-way profile in this class outside Boozer — 5.3 DBPM and 1.4 blocks per 36 at 6'10.5" means the defensive value is real and positional, not just active-hands steals numbers. Missed the last month with separate hand injuries on both hands, which creates some uncertainty, but before that he was outperforming Boozer, Peterson, and Dybantsa head-to-head this season per NBA.com. Floor is a starting two-way forward who can affect playoff games defensively from day one. The offensive ceiling (shot creation off the dribble) is what's still developing — if that closes, the ceiling is well above where most have him.</p>
+        <div class="player-stats">
+          <span><b>PTS</b> 19.8</span>
+          <span><b>AST</b> 2.7</span>
+          <span><b>BLK</b> 1.4</span>
+          <span><b>STL</b> 1.5</span>
+          <span><b>BPM</b> 14.0</span>
+          <span><b>TS%</b> 62.6</span>
+          <span><b>DBPM</b> 5.3</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- TIER 2 -->
+    <div class="tier-block reveal">
+      <div class="tier-head">
+        <span class="tier-label tier-2">Tier 2 — Guard group + late lottery bigs</span>
+        <span class="tier-desc">Strong individual profiles, lower ceiling than the top four. Each has a clear role they can fill on a good team.</span>
+      </div>
+
+      <div class="player-card">
+        <div class="player-card-top">
+          <div>
+            <span class="player-rank">5</span>
+            <span class="player-name">Keaton Wagler</span>
+            <span class="player-meta">SG/PG · Illinois · 6'6.25" 188lbs</span>
+          </div>
+          <span class="value-tag value-mid">Role/Starter</span>
+        </div>
+        <p class="player-blurb">Efficient at a lower usage (25.2%) than the guards around him in this class — stays productive without needing to dominate possession, which is the easiest profile to fit onto a playoff roster. Scored 46 in a top-10 road win (the B1G freshman record), but the floor is built on consistency rather than ceiling plays. Floor is a starter or high-end role player on a winning team. Ceiling is a quality two-way contributor who doesn't have a hole in his game.</p>
+        <div class="player-stats">
+          <span><b>PTS</b> 19.0</span>
+          <span><b>AST</b> 4.5</span>
+          <span><b>BLK</b> 0.4</span>
+          <span><b>STL</b> 1.0</span>
+          <span><b>BPM</b> 12.3</span>
+          <span><b>TS%</b> 59.6</span>
+          <span><b>USG</b> 25.2</span>
+          <span><b>DBPM</b> 3.5</span>
+        </div>
+      </div>
+
+      <div class="player-card">
+        <div class="player-card-top">
+          <div>
+            <span class="player-rank">6</span>
+            <span class="player-name">Kingston Flemings</span>
+            <span class="player-meta">PG · Houston · 6'3.75" 183lbs</span>
+          </div>
+          <span class="value-tag value-mid">Role/Starter</span>
+        </div>
+        <p class="player-blurb">The best defensive guard in this class by DBPM (6.0 — on par with Boozer's defensive number, which is remarkable for a guard). Elite anticipation, quick hands, and the film backs it up. Offensive consistency is the variable — 42-point games sit next to single-digit ones in the same season. Floor is a "10-year starter" per one NBA agent quoted in the draft coverage, and that read makes sense given the two-way toolkit. Ceiling depends on how much the offensive game tightens up.</p>
+        <div class="player-stats">
+          <span><b>PTS</b> 18.2</span>
+          <span><b>AST</b> 5.9</span>
+          <span><b>BLK</b> 0.4</span>
+          <span><b>STL</b> 1.7</span>
+          <span><b>BPM</b> 12.6</span>
+          <span><b>TS%</b> 56.3</span>
+          <span><b>DBPM</b> 6.0</span>
+        </div>
+      </div>
+
+      <div class="player-card">
+        <div class="player-card-top">
+          <div>
+            <span class="player-rank">7</span>
+            <span class="player-name">Darius Acuff Jr.</span>
+            <span class="player-meta">PG · Arkansas · 6'3.25" 186lbs</span>
+          </div>
+          <span class="value-tag value-mid">Role/Starter</span>
+        </div>
+        <p class="player-blurb">One of the most dynamic offensive freshmen in years — 6.4 assists per 36, 23.5 points, and 44% from three on real volume. The issue is the defensive number: DBPM of 0.7 is the lowest of anyone in this tier, and that's the thing that gets targeted in a playoff series once a team has a scouting report. Floor is a starter-level guard who can score from anywhere and run an offense. Ceiling is higher than Flemings offensively, but the defensive gap is real and has to be addressed.</p>
+        <div class="player-stats">
+          <span><b>PTS</b> 24.1</span>
+          <span><b>AST</b> 6.6</span>
+          <span><b>BLK</b> 0.3</span>
+          <span><b>STL</b> 0.9</span>
+          <span><b>BPM</b> 10.1</span>
+          <span><b>TS%</b> 60.4</span>
+          <span><b>USG</b> 29.5</span>
+          <span><b>DBPM</b> 0.7</span>
+        </div>
+      </div>
+
+      <div class="player-card">
+        <div class="player-card-top">
+          <div>
+            <span class="player-rank">8</span>
+            <span class="player-name">Brayden Burries</span>
+            <span class="player-meta">SG/PG · Arizona · 6'5" 215lbs</span>
+          </div>
+          <span class="value-tag value-mid">Role/Starter</span>
+        </div>
+        <p class="player-blurb">Balanced two-way guard at a moderate usage (23.2%) — DBPM of 5.7 and OBPM of 6.0 means the value shows up on both ends without requiring heavy ball possession. Looks more like a high-end role player or strong starter than a franchise piece, but that's not a knock — that's a very useful player to build around. Floor and ceiling are closer together here than the players above him, which makes him a lower-variance pick.</p>
+        <div class="player-stats">
+          <span><b>PTS</b> 19.4</span>
+          <span><b>AST</b> 2.9</span>
+          <span><b>BLK</b> 0.2</span>
+          <span><b>STL</b> 1.8</span>
+          <span><b>BPM</b> 11.7</span>
+          <span><b>TS%</b> 61.6</span>
+          <span><b>USG</b> 23.2</span>
+          <span><b>DBPM</b> 5.7</span>
+        </div>
+      </div>
+
+      <div class="player-card">
+        <div class="player-card-top">
+          <div>
+            <span class="player-rank">9</span>
+            <span class="player-name">Mikel Brown Jr.</span>
+            <span class="player-meta">PG · Louisville · 6'4.75" 190lbs</span>
+          </div>
+          <span class="value-tag value-watch">Watch</span>
+        </div>
+        <p class="player-blurb">High-usage guard (31.4% USG) with 22.4 points and 5.8 assists per 36 — the offensive production is real. Defensive number (DBPM 1.7) is middling, and TS% of 57.7% at that usage rate is where the questions are. Worth tracking whether the efficiency holds up as the competition improves, since the tools are clearly there.</p>
+        <div class="player-stats">
+          <span><b>PTS</b> 22.4</span>
+          <span><b>AST</b> 5.8</span>
+          <span><b>BLK</b> 0.2</span>
+          <span><b>STL</b> 1.5</span>
+          <span><b>BPM</b> 6.6</span>
+          <span><b>TS%</b> 57.7</span>
+          <span><b>USG</b> 31.4</span>
+          <span><b>DBPM</b> 1.7</span>
+        </div>
+      </div>
+
+      <div class="player-card">
+        <div class="player-card-top">
+          <div>
+            <span class="player-rank">10</span>
+            <span class="player-name">Nate Ament</span>
+            <span class="player-meta">SF · Tennessee · 6'10.75" 211lbs</span>
+          </div>
+          <span class="value-tag value-watch">Watch</span>
+        </div>
+        <p class="player-blurb">Size and athleticism at the wing are real, and BPM of 8.4 at 29% USG shows real production against solid competition. TS% of 53.4% is the number that needs to improve — that's below average efficiency at that usage, and it's the question mark on whether the offensive game translates or stays lottery-range on the strength of the physical profile alone.</p>
+        <div class="player-stats">
+          <span><b>PTS</b> 20.2</span>
+          <span><b>AST</b> 2.8</span>
+          <span><b>BLK</b> 0.8</span>
+          <span><b>STL</b> 1.2</span>
+          <span><b>BPM</b> 8.4</span>
+          <span><b>TS%</b> 53.4</span>
+          <span><b>USG</b> 29.0</span>
+          <span><b>DBPM</b> 3.3</span>
+        </div>
+      </div>
+
+      <div class="player-card">
+        <div class="player-card-top">
+          <div>
+            <span class="player-rank">11</span>
+            <span class="player-name">Aday Mara</span>
+            <span class="player-meta">C · Michigan · 7'4.25" 260lbs</span>
+          </div>
+          <span class="value-tag value-mid">Role/Starter</span>
+        </div>
+        <p class="player-blurb">7'4" center who helped Michigan win the national title, and the advanced numbers at his size are striking: BPM 14.3, DBPM 8.4, and 4.0 blocks per 36. Opponents shot 54.5% at the rim with him on the court versus over 60% when he was off it. The offensive game (3.7 assists per 36 suggests real court-reading ability) is more developed than you'd expect at that size. Big centers with this level of DBPM have a specific, durable playoff role.</p>
+        <div class="player-stats">
+          <span><b>PTS</b> 18.6</span>
+          <span><b>AST</b> 3.7</span>
+          <span><b>BLK</b> 4.0</span>
+          <span><b>STL</b> 0.5</span>
+          <span><b>BPM</b> 14.3</span>
+          <span><b>TS%</b> 65.9</span>
+          <span><b>USG</b> 23.1</span>
+          <span><b>DBPM</b> 8.4</span>
+        </div>
+      </div>
+
+      <div class="player-card">
+        <div class="player-card-top">
+          <div>
+            <span class="player-rank">12</span>
+            <span class="player-name">Yaxel Lendeborg</span>
+            <span class="player-meta">PF · Michigan · 6'10" 241lbs · Senior</span>
+          </div>
+          <span class="value-tag value-mid">Role/Starter</span>
+        </div>
+        <p class="player-blurb">Senior who posted the second-highest BPM on this board (16.7), at a remarkably low usage (20.4%). That combination — high BPM at low usage — is unusual and worth paying attention to: it means the value isn't usage-inflated, it's genuine positive impact on both ends in limited possessions. Older prospect (23.7 years) which scouts will weight against the production, but the efficiency and two-way numbers are hard to ignore.</p>
+        <div class="player-stats">
+          <span><b>PTS</b> 18.0</span>
+          <span><b>AST</b> 3.9</span>
+          <span><b>BLK</b> 1.5</span>
+          <span><b>STL</b> 1.3</span>
+          <span><b>BPM</b> 16.7</span>
+          <span><b>TS%</b> 64.6</span>
+          <span><b>USG</b> 20.4</span>
+          <span><b>DBPM</b> 6.9</span>
+        </div>
+      </div>
+
+      <div class="player-card">
+        <div class="player-card-top">
+          <div>
+            <span class="player-rank">13</span>
+            <span class="player-name">Cameron Carr</span>
+            <span class="player-meta">SG · Baylor · 6'5.75" 184lbs</span>
+          </div>
+          <span class="value-tag value-watch">Watch</span>
+        </div>
+        <p class="player-blurb">Scoring guard with real athleticism — 1.4 blocks per 36 at the shooting guard position is a notable defensive activity number that shows up on film as well as in the box score. BPM of 9.2 at moderate usage is solid. The defensive numbers (DBPM 2.3) are held up more by the blocks/athleticism than by positional defense, which is where the scout questions will be.</p>
+        <div class="player-stats">
+          <span><b>PTS</b> 20.2</span>
+          <span><b>AST</b> 2.8</span>
+          <span><b>BLK</b> 1.4</span>
+          <span><b>STL</b> 0.9</span>
+          <span><b>BPM</b> 9.2</span>
+          <span><b>TS%</b> 62.2</span>
+          <span><b>USG</b> 25.3</span>
+          <span><b>DBPM</b> 2.3</span>
+        </div>
+      </div>
+
+      <div class="player-card">
+        <div class="player-card-top">
+          <div>
+            <span class="player-rank">14</span>
+            <span class="player-name">Morez Johnson Jr.</span>
+            <span class="player-meta">PF/C · Michigan · 6'10.25" 251lbs</span>
+          </div>
+          <span class="value-tag value-watch">Watch</span>
+        </div>
+        <p class="player-blurb">Another Michigan big — 67.7% TS at 21.3% USG is efficient role-player production, and 1.6 blocks per 36 alongside 10.5 rebounds shows the interior presence is real. BPM data incomplete on Tankathon at time of writing. The question is whether the offensive game (1.7 assists per 36) is too limited to hold a starting spot, or whether the efficiency and rebounding make him a high-value backup piece.</p>
+        <div class="player-stats">
+          <span><b>PTS</b> 18.8</span>
+          <span><b>AST</b> 1.7</span>
+          <span><b>BLK</b> 1.6</span>
+          <span><b>STL</b> 1.0</span>
+          <span><b>TS%</b> 67.7</span>
+          <span><b>USG</b> 21.3</span>
+        </div>
+      </div>
+    </div>
+
+    <p class="board-footnote reveal">Per-36 stats from Tankathon's 2026 big board. Draft order through the lottery confirmed from ESPN post-lottery results. Rankings and tiering are my own — stats sourced, analysis isn't.</p>
+  </div>
+</section>
+
+<!-- ============ WRITING ============ -->
+<section id="writing">
+  <div class="divider reveal"></div>
+  <div style="height:64px;"></div>
+
+  <div class="mode-panel active" data-mode="arch">
+    <div class="section-head reveal">
+      <div>
+        <span class="section-eyebrow">03 · Writing</span>
+        <h2 class="section-title">Essays &amp; Reports</h2>
+      </div>
+    </div>
+
+    <div class="featured-paper reveal">
+      <span class="featured-label">Featured</span>
+      <h3 class="featured-title">A Comparison of Defensive Heritage and Urban Development: Halifax Citadel vs. Edinburgh Castle</h3>
+      <p class="featured-blurb">Compares how two fortified hilltop sites, built for nearly identical defensive purposes a century apart, were absorbed into the cities that grew around them — one kept largely intact as a national historic site, the other woven directly into a UNESCO-listed Old Town.</p>
+      <a class="proj-link" href="papers/halifax-edinburgh-heritage-essay.pdf" target="_blank">Read the paper ↗</a>
+    </div>
+
+    <div class="paper-title-list reveal">
+      <span class="paper-list-label">Also written, cleaned up and available on request</span>
+      <div class="paper-title-row">Deserted Industry to Minimalistic Hotel: Adaptive Reuse of the Dexamenes Winery</div>
+      <div class="paper-title-row">Ethical Theories and the Foundational Framework for Ethical Deliberation</div>
+      <div class="paper-title-row">Lab 3: Uncertainty in Fluid Flow Measurements</div>
+      <div class="paper-title-row">Fixed Throttle Performance Test of a Honda Gasoline Engine</div>
+    </div>
+  </div>
+
+  <div class="mode-panel" data-mode="sports">
+    <div class="section-head reveal">
+      <div>
+        <span class="section-eyebrow">03 · Writing</span>
+        <h2 class="section-title">Articles &amp; Notes</h2>
+      </div>
+      <p class="section-desc">Long-form analysis, posted here as each piece is finished.</p>
+    </div>
+
+    <div class="write-list reveal">
+      <div class="write-item">
+        <span class="write-date">In Progress</span>
+        <span class="write-title">The Popkins Effect: How Toronto's Offense Jumped from 23rd to 4th in Runs Scored</span>
+        <span class="write-tag">Draft</span>
+      </div>
+      <div class="write-item">
+        <span class="write-date">In Progress</span>
+        <span class="write-title">Do the Blue Jays Actually Struggle Against Unfamiliar Pitching? Testing the Theory with Statcast</span>
+        <span class="write-tag">In Research</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ EXPERIENCE ============ -->
+<section id="experience">
+  <div class="divider reveal"></div>
+  <div style="height:64px;"></div>
+
+  <div class="mode-panel active" data-mode="arch">
+    <div class="section-head reveal">
+      <div>
+        <span class="section-eyebrow">04 · Experience</span>
+        <h2 class="section-title">Resume</h2>
+      </div>
+    </div>
+
+    <div class="resume-block reveal">
+      <span class="resume-block-label">Education</span>
+      <div class="exp-item" style="border-bottom:none;padding-bottom:0;">
+        <div class="exp-period">Sep 2022 – Present</div>
+        <div>
+          <div class="exp-role">B.Eng, Architectural Conservation and Sustainability Engineering, Co-op Option</div>
+          <div class="exp-org">Carleton University, Ottawa, ON</div>
+          <ul>
+            <li>4th-year standing, graduating April 2027.</li>
+            <li>General In-Course Scholarship, 2022–2023.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="resume-block reveal">
+      <span class="resume-block-label">Technical Skills</span>
+      <div class="skill-tags" style="margin-bottom:0;">
+        <span class="skill-tag">Revit</span>
+        <span class="skill-tag">Inventor</span>
+        <span class="skill-tag">Fusion 360</span>
+        <span class="skill-tag">2D Isometric &amp; Orthographic Drawing</span>
+        <span class="skill-tag">Climate Consultant</span>
+        <span class="skill-tag">LBNL THERM / WINDOW</span>
+        <span class="skill-tag">Microsoft Office</span>
+      </div>
+    </div>
+
+    <div class="resume-block reveal">
+      <span class="resume-block-label">Communication</span>
+      <div class="about-text" style="margin:0;">
+        <p style="margin-bottom:10px;">Calm and grounded communication style that maintains a positive and professional working environment. Effective and logical problem-solving approach to identify and resolve problems efficiently. Engaging coach and team player who collaborates well through positive, constructive feedback.</p>
+        <p style="margin-bottom:0;">Languages: fluent in English, working proficiency in French (oral and written).</p>
+      </div>
+    </div>
+
+    <div class="resume-block reveal">
+      <span class="resume-block-label">Work Experience</span>
+      <div class="exp-item">
+        <div class="exp-period">Aug 2023 – Sep 2023<br>Aug 2024 – Sep 2024</div>
+        <div>
+          <div class="exp-role">Office Intern</div>
+          <div class="exp-org">Family Law Solutions — Ancaster, ON</div>
+          <ul>
+            <li>Implemented office improvements including technical system support to set up equipment.</li>
+            <li>Reviewed, organized, and sorted confidential client files, adding critical data to the company database and disposing of scanned documents through a confidential content disposal process.</li>
+          </ul>
+        </div>
+      </div>
+      <div class="exp-item">
+        <div class="exp-period">Jul 2021 – Jul 2022</div>
+        <div>
+          <div class="exp-role">Senior Dishwasher / Prep Cook</div>
+          <div class="exp-org">El Spero — Oakville, ON</div>
+          <ul>
+            <li>Maintained kitchen efficiency by balancing inventory and ingredient restocking with dishwashing responsibilities.</li>
+            <li>Prepared and portioned menu ingredients to keep operations smooth during high-volume periods.</li>
+            <li>Trained and coached new team members on back-kitchen processes, and managed restaurant opening and closing.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="resume-block reveal">
+      <span class="resume-block-label">Applied Projects</span>
+      <div class="exp-item">
+        <div class="exp-period">Oct 2022 – Mar 2025</div>
+        <div>
+          <div class="exp-role">Team Captain — Troitsky Bridge Design and Modelling Competition</div>
+          <div class="exp-org">Carleton University</div>
+          <ul>
+            <li>Coordinated the overall design process, engaging team members for input and consensus throughout.</li>
+            <li>Built the arch-cable bridge using woodworking skills and an innovative cable design within strict material limits, and prepared the team for a professional industry-style presentation.</li>
+          </ul>
+        </div>
+      </div>
+      <div class="exp-item">
+        <div class="exp-period">Feb 2023 – Apr 2023</div>
+        <div>
+          <div class="exp-role">Group Leader — Truss Design Project</div>
+          <div class="exp-org">Carleton University</div>
+          <ul>
+            <li>Led and coordinated the team by breaking down and distributing required tasks.</li>
+            <li>Completed the supporting calculations and composed the engineering documentation behind the project design, resulting in a high-quality report.</li>
+          </ul>
+        </div>
+      </div>
+      <div class="exp-item">
+        <div class="exp-period">Jan 2023 – Feb 2023</div>
+        <div>
+          <div class="exp-role">Group Leader — Lecture Hall Chair Ergonomics Redesign</div>
+          <div class="exp-org">Carleton University</div>
+          <ul>
+            <li>Managed the team by building consensus on approach, assigning tasks, and proofreading before finalizing content.</li>
+            <li>Used Fusion 360 to build a 3D model of the proposed design.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="resume-block reveal" style="border-bottom:none;">
+      <span class="resume-block-label">Extracurriculars</span>
+      <div class="about-text" style="margin:0;">
+        <p style="margin-bottom:0;">Intramural hockey. Multi-instrumentalist.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="mode-panel" data-mode="sports">
+    <div class="section-head reveal">
+      <div>
+        <span class="section-eyebrow">04 · Approach</span>
+        <h2 class="section-title">Approach</h2>
+      </div>
+    </div>
+    <div class="exp-list reveal">
+      <div class="exp-item">
+        <div class="exp-period">Method</div>
+        <div>
+          <div class="exp-role">Data First, Narrative Second</div>
+          <div class="exp-org"></div>
+          <ul>
+            <li>Start from a specific, testable question rather than a take — then pull the Statcast or play-by-play data that actually answers it.</li>
+            <li>Report what the data shows, including when it doesn't support the original idea.</li>
+          </ul>
+        </div>
+      </div>
+      <div class="exp-item">
+        <div class="exp-period">Tools</div>
+        <div>
+          <div class="exp-role">Python, Excel, Advanced Stats</div>
+          <div class="exp-org"></div>
+          <ul>
+            <li>Python for pulling and modeling Statcast and play-by-play data, Excel for quicker comparisons, and advanced stats across MLB, NBA, and NHL rather than one sport's specific tooling.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FOOTER / CONTACT ============ -->
+<footer id="contact">
+  <div class="footer-grid reveal">
+    <div class="footer-title">Get in touch.</div>
+    <div class="footer-links">
+      <a href="mailto:1murraycol2@gmail.com">1murraycol2@gmail.com</a>
+      <a href="#">LinkedIn ↗</a>
+      <a href="#">GitHub ↗</a>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2026 Colin Murray</span>
+    <span>Carleton University · Architectural Engineering</span>
+  </div>
+</footer>
+
+<script>
+  // ----- Mode toggle (Architecture <-> Sports) -----
+  const toggleOpts = document.querySelectorAll('.toggle-opt');
+  toggleOpts.forEach(opt => {
+    opt.addEventListener('click', () => {
+      const mode = opt.getAttribute('data-mode');
+      toggleOpts.forEach(o => o.classList.remove('active'));
+      opt.classList.add('active');
+
+      document.querySelectorAll('.mode-panel').forEach(panel => {
+        panel.classList.remove('active');
+        if (panel.getAttribute('data-mode') === mode) {
+          panel.classList.add('active');
+        }
+      });
+
+      if (mode === 'sports') {
+        document.body.classList.add('mode-sports');
+      } else {
+        document.body.classList.remove('mode-sports');
+      }
+    });
+  });
+
+  // ----- Lightbox -----
+  function openLightbox(path) {
+    const lb = document.getElementById('lightbox');
+    const img = document.getElementById('lightbox-img');
+    img.src = path;
+    lb.classList.add('active');
+  }
+  document.getElementById('lightbox').addEventListener('click', () => {
+    document.getElementById('lightbox').classList.remove('active');
+  });
+
+  // ----- Writing item citation expand -----
+  function toggleCite(el) {
+    el.classList.toggle('expanded');
+  }
+
+  // ----- Scroll reveal -----
+  const revealEls = document.querySelectorAll('.reveal');
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('in');
+      }
+    });
+  }, { threshold: 0.12 });
+  revealEls.forEach(el => io.observe(el));
+</script>
+
+</body>
+</html>
